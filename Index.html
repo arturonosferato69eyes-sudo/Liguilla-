@@ -1,61 +1,92 @@
-DOCTYPE html>
-<html 1
-        <div class="team"><strong>8. Pachuca</strong><span>-</span></div>
-        <div class="fecha">Ida: 26 Nov • Vuelta: 29 Nov</div>
-      </div>
-      <div class="match">
-        <div class="team"><strong>2. Cruz Azul</strong><span>-</span></div>
-        <div class="vs">VS</div>
-        <div class="team"><strong>7. León</strong><span>-</span></div>
-        <div class="fecha">Ida: 26 Nov • Vuelta: 29 Nov</div>
-      </div>
-      <div class="match">
-        <div class="team"><strong>3. América</strong><span>-</span></div>
-        <div class="vs">VS</div>
-        <div class="team"><strong>6. Monterrey</strong><span>-</span></div>
-        <div class="fecha">Ida: 25 Nov • Vuelta: 28 Nov</div>
-      </div>
-      <div class="match">
-        <div class="team"><strong>4. Atlas</strong><span>-</span></div>
-        <div class="vs">VS</div>
-        <div class="team"><strong>5. Toluca</strong><span>-</span></div>
-        <div class="fecha">Ida: 25 Nov • Vuelta: 28 Nov</div>
-      </div>
-    </div>
-
-    <div class="col">
-      <h3>SEMIFINALES</h3>
-      <div class="match">
-        <div class="team"><strong>Ganador 1 vs 8</strong></div>
-        <div class="vs">VS</div>
-        <div class="team"><strong>Ganador 4 vs 5</strong></div>
-        <div class="fecha">Ida: 2-3 Dic • Vuelta: 5-6 Dic</div>
-      </div>
-      <div class="match">
-        <div class="team"><strong>Ganador 2 vs 7</strong></div>
-        <div class="vs">VS</div>
-        <div class="team"><strong>Ganador 3 vs 6</strong></div>
-        <div class="fecha">Ida: 2-3 Dic • Vuelta: 5-6 Dic</div>
-      </div>
-      <p style="font-size:12px;color:#aaa;text-align:center">En semis se reacomoda por tabla general: el mejor clasificado contra el peor.</p>
-    </div>
-
-    <div class="col">
-      <h3>🏆 FINAL</h3>
-      <div class="match final" style="background:#1a2342;border:2px solid #00ff88">
-        <div class="team"><strong>Ganador Semifinal 1</strong></div>
-        <div class="vs">VS</div>
-        <div class="team"><strong>Ganador Semifinal 2</strong></div>
-        <div class="fecha">Ida: 10 Dic • Vuelta: 13 Dic</div>
-      </div>
-      <div class="match">
-        <h3 style="background:#222;color:white">MI CAMPEÓN</h3>
-        <input type="text" placeholder="Escribe tu campeón aquí...">
-        <p style="font-size:12px;text-align:center;margin-top:8px;color:#aaa">Si hay empate global, avanza el mejor en tabla.</p>
-      </div>
-    </div>
-  </div>
-
-  <p class="footer">Hecho por arturonosferato69eyes-sudo • Datos J17 Apertura 2026 • Chivas líder con 33 pts tras ganar 1-0 a Cruz Azul</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liguilla MX - Automática</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#0b1220;color:#fff;padding:16px}
+h1{text-align:center;margin:6px 0 2px} p.sub{text-align:center;color:#9fb3d1;margin:0 0 14px}
+.card{background:#131e33;border:1px solid #263554;border-radius:16px;padding:12px;margin-bottom:12px}
+.card h2{margin:0 0 8px;font-size:16px;color:#ffd166}
+.match{background:#0f1830;border:1px solid #2a3a5e;border-radius:12px;padding:10px;margin-bottom:10px}
+.teams{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.team{font-weight:bold}
+.score{display:flex;gap:6px;align-items:center}
+.score input{width:44px;padding:8px;border-radius:8px;border:1px solid #33456e;background:#0b1220;color:#fff;text-align:center;font-size:16px;font-weight:bold}
+.global{text-align:center;margin-top:8px;color:#ffd166;font-weight:bold;font-size:14px}
+.winner{color:#4ade80}
+.btn{width:100%;padding:12px;border:0;border-radius:12px;background:#ffd166;font-weight:900;font-size:16px;margin-top:8px}
+.small{text-align:center;color:#9fb3d1;font-size:12px;margin-top:8px}
+.champ{background:#ffd166;color:#111;text-align:center;padding:16px;border-radius:16px;font-size:22px;font-weight:900;margin-top:12px;display:none}
+</style>
+</head>
+<body>
+<h1>🏆 LIGUILLA MX</h1>
+<p class="sub">Pon Ida y Vuelta, se calcula solo el global</p>
+<div class="card"><h2>Cuartos de Final</h2><div id="cuartos"></div></div>
+<div class="card"><h2>Semifinales</h2><div id="semis"></div></div>
+<div class="card"><h2>Final</h2><div id="final"></div></div>
+<div id="campeon" class="champ"></div>
+<button class="btn" onclick="calcular()">🔄 CALCULAR QUIÉN PASA</button>
+<p class="small">Si empatan en global, pasa el mejor sembrado. Chivas 1, Cruz Azul 2, América 3, Atlas 4, Toluca 5, Monterrey 6, León 7, Pachuca 8.</p>
+<script>
+const cuartos=[
+ {a:"Chivas",sa:1,b:"Pachuca",sb:8},
+ {a:"Cruz Azul",sa:2,b:"León",sb:7},
+ {a:"América",sa:3,b:"Monterrey",sb:6},
+ {a:"Atlas",sa:4,b:"Toluca",sb:5},
+];
+function input(id,ph){return `<input id="${id}" type="number" min="0" placeholder="${ph}" oninput="calcular()">`}
+function renderCuartos(){
+ document.getElementById('cuartos').innerHTML=cuartos.map((m,i)=>`
+ <div class="match"><div class="teams"><span class="team">${m.a}</span><span class="score">${input('c'+i+'a1','Ida')} - ${input('c'+i+'b1','Ida')}</span><span class="team">${m.b}</span></div>
+ <div class="teams" style="margin-top:8px"><span class="team">${m.a} (Vuelta)</span><span class="score">${input('c'+i+'a2','Vta')} - ${input('c'+i+'b2','Vta')}</span><span class="team">${m.b}</span></div>
+ <div class="global" id="gC${i}">Global: -</div></div>`).join('');
+}
+function getVal(id){let v=document.getElementById(id).value;return v===""?null:parseInt(v)}
+function ganador(m,i){
+ let a1=getVal('c'+i+'a1'),b1=getVal('c'+i+'b1'),a2=getVal('c'+i+'a2'),b2=getVal('c'+i+'b2');
+ if(a1===null||b1===null||a2===null||b2===null) return null;
+ let ga=a1+a2, gb=b1+b2;
+ document.getElementById('gC'+i).innerHTML=`Global: ${m.a} ${ga} - ${gb} ${m.b} &nbsp; <span class="winner">Pasa: ${ga>gb?m.a:gb>ga?m.b:(m.sa<m.sb?m.a:m.b)}</span>`;
+ if(ga>gb) return m; if(gb>ga) return {a:m.b,sa:m.sb}; return m.sa<m.sb?m:{a:m.b,sa:m.sb};
+}
+function matchHTML(title,teamA,teamB,prefix){
+ if(!teamA||!teamB) return `<div class="match"><b>${title}</b><div class="global">Esperando ganadores...</div></div>`;
+ return `<div class="match"><b>${title}</b>
+ <div class="teams" style="margin-top:8px"><span class="team">${teamA.a}</span><span class="score">${input(prefix+'a1','Ida')} - ${input(prefix+'b1','Ida')}</span><span class="team">${teamB.a}</span></div>
+ <div class="teams" style="margin-top:8px"><span class="team">${teamA.a}</span><span class="score">${input(prefix+'a2','Vta')} - ${input(prefix+'b2','Vta')}</span><span class="team">${teamB.a}</span></div>
+ <div class="global" id="g${prefix}">Global: -</div></div>`;
+}
+function ganador2(teamA,teamB,prefix){
+ if(!teamA||!teamB) return null;
+ let a1=getVal(prefix+'a1'),b1=getVal(prefix+'b1'),a2=getVal(prefix+'a2'),b2=getVal(prefix+'b2');
+ if(a1===null||b1===null||a2===null||b2===null) return null;
+ let ga=a1+a2, gb=b1+b2;
+ let win = ga>gb?teamA:gb>ga?teamB:(teamA.sa<teamB.sa?teamA:teamB);
+ document.getElementById('g'+prefix).innerHTML=`Global: ${teamA.a} ${ga} - ${gb} ${teamB.a} &nbsp; <span class="winner">Pasa: ${win.a}</span>`;
+ return win;
+}
+function calcular(){
+ let g=[0,1,2,3].map(i=>ganador(cuartos[i],i));
+ let tS1=g[0]?{a:g[0].a,sa:g[0].sa}:null;
+ let tS2=g[1]?{a:g[1].a,sa:g[1].sa}:null;
+ let tS3=g[2]?{a:g[2].a,sa:g[2].sa}:null;
+ let tS4=g[3]?{a:g[3].a,sa:g[3].sa}:null;
+ let vals={}; document.querySelectorAll('input').forEach(e=>vals[e.id]=e.value);
+ document.getElementById('semis').innerHTML = matchHTML('Semifinal 1',tS1,tS2,'s1') + matchHTML('Semifinal 2',tS3,tS4,'s2');
+ document.querySelectorAll('input').forEach(e=>{if(vals[e.id]!==undefined) e.value=vals[e.id]});
+ let wS1=ganador2(tS1,tS2,'s1');
+ let wS2=ganador2(tS3,tS4,'s2');
+ let vals2={}; document.querySelectorAll('input').forEach(e=>vals2[e.id]=e.value);
+ document.getElementById('final').innerHTML = matchHTML('Final',wS1,wS2,'f1');
+ document.querySelectorAll('input').forEach(e=>{if(vals2[e.id]!==undefined) e.value=vals2[e.id]});
+ let wF=ganador2(wS1,wS2,'f1');
+ let c=document.getElementById('campeon');
+ if(wF){c.style.display='block';c.innerHTML='🏆 CAMPEÓN: '+wF.a}else{c.style.display='none'}
+}
+renderCuartos(); calcular();
+</script>
 </body>
 </html>
